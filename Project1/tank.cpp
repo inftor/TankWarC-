@@ -78,9 +78,18 @@ void tank::DrawTank( bool show) {
 			if (TankMode[nDir][i][j] == 1) {
 				int x = point.X + i - 1;
 				int y = point.Y + j - 1;
-				g_map[x][y] = show ? 玩家 : 空地;
+				switch (judge)
+				{
+				case 玩家: g_map[x][y] = show ? 玩家 : 空地; break;
+				case 玩家2: g_map[x][y] = show ? 玩家2 : 空地; break;
+				case AI: g_map[x][y] = show ? AI : 空地; break;
+				default:
+					break;
+				}
+				//g_map[x][y] = show ? 玩家 : 空地;
 				MAP map;
-				map.WriteChar(x, y, "□", show ? 2 : 0);
+				const char* s = this->zhengying ? "□" : "■";
+				map.WriteChar(x, y, s, show ? color : 0);
 
 			}
 		}
@@ -90,51 +99,72 @@ void tank::DrawTank( bool show) {
 
 
 
-void tank::DrawTank2(bool show) {
-
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (TankMode[nDir][i][j] == 1) {
-				int x = point.X + i - 1;
-				int y = point.Y + j - 1;
-				g_map[x][y] = show ? 玩家2 : 空地;
-				MAP map;
-				map.WriteChar(x, y, "□", show ? 2 : 0);
-
-			}
-		}
-
-	}
-}
-void tank::DrawAITank(bool show) {
-
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (TankMode[nDir][i][j] == 1) {
-				int x = point.X + i - 1;
-				int y = point.Y + j - 1;
-				g_map[x][y] = show ? AI : 空地;
-				MAP::WriteChar(x, y, "□", show ? 5 : 0);
-
-			}
-		}
-
-	}
-}
+//void tank::DrawTank2(bool show) {
+//
+//	for (int i = 0; i < 3; i++)
+//	{
+//		for (int j = 0; j < 3; j++)
+//		{
+//			if (TankMode[nDir][i][j] == 1) {
+//				int x = point.X + i - 1;
+//				int y = point.Y + j - 1;
+//				g_map[x][y] = show ? 玩家2 : 空地;
+//				MAP map;
+//				map.WriteChar(x, y, "□", show ? 2 : 0);
+//
+//			}
+//		}
+//
+//	}
+//}
+//void tank::DrawAITank(bool show) {
+//
+//	for (int i = 0; i < 3; i++)
+//	{
+//		for (int j = 0; j < 3; j++)
+//		{
+//			if (TankMode[nDir][i][j] == 1) {
+//				int x = point.X + i - 1;
+//				int y = point.Y + j - 1;
+//				g_map[x][y] = show ? AI : 空地;
+//				MAP::WriteChar(x, y, "■", show ? color : 0);
+//
+//			}
+//		}
+//
+//	}
+//}
+//
+//void tank::DrawAITank2(bool show) {
+//
+//	for (int i = 0; i < 3; i++)
+//	{
+//		for (int j = 0; j < 3; j++)
+//		{
+//			if (TankMode[nDir][i][j] == 1) {
+//				int x = point.X + i - 1;
+//				int y = point.Y + j - 1;
+//				g_map[x][y] = show ? AI : 空地;
+//				MAP::WriteChar(x, y, "■", show ? 3 : 0);
+//
+//			}
+//		}
+//
+//	}
+//}
 
 //初始化坦克坐标及位置
-void tank::InitTank( int x, int y, int dir,bool zhenyin,int xueliang)
+void tank::InitTank( int x, int y, int dir,bool zhenyin,int xueliang, int color, int speed,	int judge)
 {
+	this->color = color;
+	this->speed = speed;
 	this->point.X = x;
 	this->point.Y = y;
 	this->nDir = dir;
 	this->end = this->end2 = clock();
 	this->zhengying = zhenyin;
 	this->ncountTank1 = xueliang;
+	this->judge = judge;
 	DrawTank(true);
 }
 
@@ -177,7 +207,7 @@ void tank::MoveTank( int Dir) {
 
 	if (nlife==true)
 	{
-		if (clock() - this->end < 50)
+		if (clock() - this->end < this->speed)
 			return;
 		DrawTank(false);
 		if (this->nDir != Dir)
@@ -186,7 +216,7 @@ void tank::MoveTank( int Dir) {
 		}
 		else
 		{
-			if (TankCheak()) {
+			if (TankCheak()/*|| g_map[this->point.X][this->point.Y] == 草地*/) {
 				switch (nDir)
 				{
 				case 上:
@@ -209,116 +239,134 @@ void tank::MoveTank( int Dir) {
 	}
 	else
 	{
+
 		return;
 	}
 }
 
-void tank::MoveTank2(int Dir) {
-
-	if (nlife == true)
-	{
-		if (clock() - this->end < 50)
-			return;
-		DrawTank(false);
-		if (this->nDir != Dir)
-		{
-			this->nDir = Dir;
-		}
-		else
-		{
-			if (TankCheak()) {
-				switch (nDir)
-				{
-				case 上:
-					point.X--; break;
-				case 下:
-					point.X++; break;
-				case 左:
-					point.Y--; break;
-				case 右:
-					point.Y++; break;
-
-				default:
-					break;
-				}
-			}
-
-		}
-		DrawTank2(true);
-		this->end = clock();
-	}
-	else
-	{
-		return;
-	}
-}
-
-void tank::MoveAITank(int Dir) {
-
-	if (nlife==true)
-	{
-		if (clock() - this->end < 50)
-			return;
-		DrawAITank(false);
-		if (this->nDir != Dir)
-		{
-			this->nDir = Dir;
-		}
-		else
-		{
-			if (TankCheak()) {
-				switch (nDir)
-				{
-				case 上:
-					point.X--; break;
-				case 下:
-					point.X++; break;
-				case 左:
-					point.Y--; break;
-				case 右:
-					point.Y++; break;
-
-				default:
-					break;
-				}
-			}
-
-		}
-		DrawAITank(true);
-		this->end = clock();
-
-	}
-	else
-	{
-		return;
-	}
-}
-
-//bool tank::IsBulletOn(Bullet& bullet)
-//{
-//	for (int i = -1; i < 2; i++)
+//void tank::MoveTank2(int Dir) {
+//
+//	if (nlife == true)
 //	{
-//		for (int j = -1; j < 2; j++)
+//		if (clock() - this->end < 50)
+//			return;
+//		DrawTank(false);
+//		if (this->nDir != Dir)
 //		{
-//			if (TankMode[this->nDir][i + 1][j + 1] == 1)
-//			{
-//				if (g_map[this->point.X][this->point.Y]== g_map[bullet.point.X][bullet.point.Y])
+//			this->nDir = Dir;
+//		}
+//		else
+//		{
+//			if (TankCheak()) {
+//				switch (nDir)
 //				{
-//					if (this->zhengying != bullet.zhenyin)
-//					{
-//						
-//					}
-//					else
-//					{
-//						return false;
-//					}
-//					
+//				case 上:
+//					point.X--; break;
+//				case 下:
+//					point.X++; break;
+//				case 左:
+//					point.Y--; break;
+//				case 右:
+//					point.Y++; break;
+//
+//				default:
+//					break;
 //				}
 //			}
+//
 //		}
+//		DrawTank2(true);
+//		this->end = clock();
+//	}
+//	else
+//	{
+//		return;
 //	}
 //}
 
+//void tank::MoveAITank(int Dir) {
+//
+//	if (nlife==true)
+//	{
+//		if (clock() - this->end < this->speed)
+//			return;
+//
+//		DrawAITank(false);
+//		if (this->nDir != Dir)
+//		{
+//			this->nDir = Dir;
+//		}
+//		else
+//		{
+//			if (TankCheak()) {
+//				switch (nDir)
+//				{
+//				case 上:
+//					point.X--; break;
+//				case 下:
+//					point.X++; break;
+//				case 左:
+//					point.Y--; break;
+//				case 右:
+//					point.Y++; break;
+//
+//				default:
+//					break;
+//				}
+//			}
+//
+//		}
+//		DrawAITank(true);
+//		this->end = clock();
+//
+//	}
+//	else
+//	{
+//		return;
+//	}
+//}
+
+//void tank::MoveAITank2(int Dir) {
+//
+//	if (nlife == true)
+//	{
+//		if (clock() - this->end < 50)
+//			return;
+//
+//		DrawAITank2(false);
+//		if (this->nDir != Dir)
+//		{
+//			this->nDir = Dir;
+//		}
+//		else
+//		{
+//			if (TankCheak()) {
+//				switch (nDir)
+//				{
+//				case 上:
+//					point.X--; break;
+//				case 下:
+//					point.X++; break;
+//				case 左:
+//					point.Y--; break;
+//				case 右:
+//					point.Y++; break;
+//
+//				default:
+//					break;
+//				}
+//			}
+//
+//		}
+//		DrawAITank2(true);
+//		this->end = clock();
+//
+//	}
+//	else
+//	{
+//		return;
+//	}
+//}
 
 
 
@@ -348,3 +396,4 @@ void tank::MoveAITank(int Dir) {
 //		return 	ncountAI2;
 //	}
 //
+

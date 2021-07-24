@@ -16,10 +16,10 @@ static int a = 0;
 
 void game::MakeTank()
 {
-	m_Player1.InitTank(4, 30, 0,true,5, 0xf, 30,玩家);
-	m_Player2.InitTank(23, 20, 0, true,5, 0x4, 30, 玩家2);
-	AIPlayer[0].InitTank(10, 3, 0,false,5, 0x1, 10,AI);
-	AIPlayer[1].InitTank(30, 30, 0, false,3, 0x2, 500, AI);
+	m_Player1.InitTank(4, 30, 0,true,5);
+	m_Player2.InitTank(20, 20, 0, true,5);
+	AIPlayer[0].InitTank(10, 3, 0,false,3);
+	AIPlayer[1].InitTank(30, 30, 0, false,3);
 }
 int game::GameRun(int num) {
 
@@ -33,9 +33,9 @@ int game::GameRun(int num) {
 	}
 	if (num==1)
 	{
-		m_Player1.InitTank(4, 30, 0,true,5, 0xf, 20,玩家);
-		AIPlayer[0].InitTank(10, 3, 0,false,5, 0x7, 20, AI);
-		AIPlayer[1].InitTank(30, 30, 0,false,3, 0x2, 300, AI);
+		m_Player1.InitTank(4, 30, 0,true,5);
+		AIPlayer[0].InitTank(10, 3, 0,false,3);
+		AIPlayer[1].InitTank(30, 30, 0,false,3);
 		MAP::DrawMap();
 		MAP::DrawZaw();
 	}
@@ -76,10 +76,10 @@ int game::GameRun(int num) {
 															CreatBull(m_Player1);
 															PlaySound(TEXT("./fire.wav"), NULL, SND_FILENAME | SND_ASYNC);//播放开火音效;
 		}
-		if (dir == '5' && (m_Player2.GetLife() == true)) m_Player2.MoveTank( 上);
-		if (dir == '2' && (m_Player2.GetLife() == true)) m_Player2.MoveTank( 下);
-		if (dir == '1' && (m_Player2.GetLife() == true)) m_Player2.MoveTank( 左);
-		if (dir == '3' && (m_Player2.GetLife() == true)) m_Player2.MoveTank( 右);
+		if (dir == '5' && (m_Player2.GetLife() == true)) m_Player2.MoveTank2( 上);
+		if (dir == '2' && (m_Player2.GetLife() == true)) m_Player2.MoveTank2( 下);
+		if (dir == '1' && (m_Player2.GetLife() == true)) m_Player2.MoveTank2( 左);
+		if (dir == '3' && (m_Player2.GetLife() == true)) m_Player2.MoveTank2( 右);
 		if (dir == ' ' && (m_Player2.GetLife() == true)) {
 														CreatBull(m_Player2);
 														PlaySound(TEXT("./fire.wav"), NULL, SND_FILENAME | SND_ASYNC);//播放开火音效;
@@ -175,12 +175,12 @@ void game::AITank()
 	}
 	if (AIPlayer[0].GetLife())
 	{
-		AIPlayer[0].MoveTank(rand() % 4);
+		AIPlayer[0].MoveAITank(rand() % 4);
 		CreatBull(AIPlayer[0]);
 	}
 	if (AIPlayer[1].GetLife())
 	{
-		AIPlayer[1].MoveTank(rand() % 4);
+		AIPlayer[1].MoveAITank(rand() % 4);
 		CreatBull(AIPlayer[1]);
 	}
 	//
@@ -312,7 +312,6 @@ void  game::initDrawMap()
 				case 钢墙:	MAP::WriteChar(i, j, "■", 7); break;
 				case AI:	MAP::WriteChar(i, j, "□", 5); break;
 				case 河流:	MAP::WriteChar(i, j, "≈", 3); break;
-				//case 草地:	MAP::WriteChar(i, j, "§", 2); break;
 				default:
 					break;
 				}

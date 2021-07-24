@@ -23,7 +23,11 @@ public:
 	static int GetKeyInput();
 	void MoveTank(int Dir);//移动tank1
 	void DrawTank( bool show);//画tank1
-	void InitTank(int x, int y, int dir, bool zhenying,int xueliang, int color, int speed, int judge);
+	void MoveTank2(int Dir);//移动tank2
+	void DrawTank2(bool show);//画tank2
+	void MoveAITank(int Dir);//移动AItank
+	void DrawAITank(bool show);//画AItank
+	void InitTank(int x, int y, int dir, bool zhenyin,int xueliang);
 	bool retzhenying();
 	bool TankCheak();
 
@@ -39,17 +43,14 @@ public:
 	////返回生命值函数：
 	//static int getchar(int num);
 	 int ncountTank1;
-	 int color;
 	
 private:
 	bool nlife=true;
 	int nspeed;
 	bool zhengying;
-	int judge;
 
 	clock_t end;
 	clock_t end2;
-	int speed;
 	static int TankMod[4][3][3];
 
 };

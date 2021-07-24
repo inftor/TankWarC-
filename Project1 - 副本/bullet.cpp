@@ -23,7 +23,6 @@ void Bullet::InitBullet(tank& obj )
 		zhenyin = true;
 	}
 	dir = obj.nDir;
-
 	alive = true;
 	switch (dir)
 	{
@@ -44,8 +43,7 @@ void Bullet::DrawBullet( bool show)
 	if (this->oldpoint.X == 0 || this->oldpoint.Y == 0 
 		|| this->oldpoint.X == 39 || this->oldpoint.Y == 39
 		|| g_map[this->point.X][this->point.Y] == 河流
-		|| g_map[this->point.X][this->point.Y] == 钢墙
-		|| g_map[this->point.X][this->point.Y] == 草地)
+		|| g_map[this->point.X][this->point.Y] == 钢墙)
 	{
 		return;
 	}
@@ -125,7 +123,7 @@ bool Bullet::CheckBullet() {
 					{
 						if (zhenyin != AIPlayer[i].retzhenying())
 						{
- 							AIPlayer[i].ncountTank1--;
+							AIPlayer[i].ncountTank1--;
 							if (AIPlayer[i].ncountTank1 < 0)
 							{
 								AIPlayer[i].ncountTank1 = 0;
@@ -186,12 +184,6 @@ bool Bullet::CheckBullet() {
 		}
 	}
 
-
-	//else if (g_map[this->point.X][this->point.Y] == 草地)
-	//{
-	//	//MAP::WriteChar(this->point.X, this->point.Y, "§", 2);
-	//	return true;
-	//}
 
 
 	return false;

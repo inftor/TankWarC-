@@ -67,15 +67,15 @@ void MAP::DrawZaw()
 		}
 	}
 
-	//for (int i = 4; i < 10; i++)
-	//{
-	//	for (int j = 8; j < 25; j++)
-	//	{
-	//		WriteChar(i, j, "¡ì", 2);
-	//		g_map[i][j] = ²ÝµØ;
-	//	}
-	//}
-	//
+	for (int i = 8; i < 10; i++)
+	{
+		for (int j = 8; j < 25; j++)
+		{
+			WriteChar(i, j, "¡ö", 7);
+			g_map[i][j] = ¸ÖÇ½;
+		}
+	}
+	
 
 	for (int i = 34; i < 36; i++)
 	{
